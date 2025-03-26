@@ -1,21 +1,12 @@
 package com.example.demo.controller;
 
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.common.exception.GError;
-import com.example.demo.common.exception.GException;
 import com.example.demo.common.model.GResponse;
-import com.example.demo.model.map.UserMap;
 import com.example.demo.service.LoginService;
 import com.example.demo.service.UserService;
 
@@ -35,7 +26,7 @@ public class GreetingController {
 
 	private final UserService userService;
 		
-    @Operation(summary = "기본 테스트")
+    @Operation(summary = "화이트 리스트 테스트( 로그인 없이 접근 가능 )")
 	@GetMapping("/greeting")
 	public ResponseEntity<GResponse> greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
 		log.info("greeting 메소드 콜");
@@ -55,7 +46,8 @@ public class GreetingController {
         return ResponseEntity.ok().body(new GResponse("0000", "0000 리턴 메시지", jwt));
 	}
 
-    @PostMapping("/test")
+    @Operation(summary = "로그인 정보 테스트( token 으로 로그인 정보 가져오기 )")
+    @PostMapping("/logininfo")
 	public ResponseEntity<GResponse> greeting() {
 		log.info("test 메소드 콜");
 		String strTemp = loginService.getTest();
