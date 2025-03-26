@@ -32,9 +32,12 @@ public class LoginService {
 		Optional<UserMap> userOptional = userService.getUserById(userId);
 
         String jwt = jwtTokenHelper.generateJwt(userOptional.get().getUserId(), "ADMIN", "1234");
-        log.debug("kk=" + jwtTokenHelper.getClaimsToUserId(jwt));
-        jwtTokenHelper.getCurrentUserID();
         return jwt;
+    }
+
+    public String getTest() {
+        // return jwtTokenHelper.getClaimsToUserId();
+        return jwtTokenHelper.getClaimsToUserCorpCode();
     }
 
 }

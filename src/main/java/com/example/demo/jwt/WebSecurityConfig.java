@@ -62,14 +62,14 @@ public class WebSecurityConfig {
         
         // http basic 인증 방식 disable 설정
         http.httpBasic((auth -> auth.disable()));
-
+/*
         // 경로별 인가 작업
         http.authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/adminlogin", "/jwt-login", "/jwt-login/", "/jwt-login/login", "/jwt-login/join").permitAll()
                         .requestMatchers("/jwt-login/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
         );
-
+*/
         // 세션 설정
         http.sessionManagement((session) -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS));

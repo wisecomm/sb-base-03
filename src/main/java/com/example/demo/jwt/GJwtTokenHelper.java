@@ -2,6 +2,7 @@ package com.example.demo.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.example.demo.common.model.GResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -95,16 +98,45 @@ public class GJwtTokenHelper {
                 .getPayload();
     }
 
-    public String getClaimsToUserId(String token) {
+    public String getCurrentAuthTokenRequest() {
+        // Try to get current request using RequestContextHolder
+        try {
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+            String authHeader = request.getHeader("Authorization");
+            log.info("authHeader : {}", authHeader);
+            log.info("authHeader2 : {}", getHeaderToToken(authHeader));
+            return getHeaderToToken(authHeader);
+        } catch (IllegalStateException e) {
+            log.warn("Not called within request context - RequestContextHolder not available");
+        }
+        
+        // Fall back to SecurityContext if request isn't available
+        return "";
+    }
+
+    public String getClaimsToUserId() {
+        String token = getCurrentAuthTokenRequest();
+        if(token == null || token.isEmpty()) {
+            return "";
+        }
         Claims claims = getTokenToClaims(token);
         return claims.get(GJwtTokenHelper.JWT_USER_ID).toString();
     }
 
-    public String getClaimsToUserRole(String token) {
+
+    public String getClaimsToUserRole() {
+        String token = getCurrentAuthTokenRequest();
+        if(token == null || token.isEmpty()) {
+            return "";
+        }
         Claims claims = getTokenToClaims(token);
         return claims.get(GJwtTokenHelper.JWT_USER_ROLE).toString();
     }
-    public String getClaimsToUserCorpCode(String token) {
+    public String getClaimsToUserCorpCode() {
+        String token = getCurrentAuthTokenRequest();
+        if(token == null || token.isEmpty()) {
+            return "";
+        }
         Claims claims = getTokenToClaims(token);
         return claims.get(GJwtTokenHelper.JWT_CORP_CODE).toString();
     }
@@ -168,29 +200,6 @@ public class GJwtTokenHelper {
         } catch (Exception exception) {
             log.error("Token Expired", exception);
         }
-    }
-
-    public String getCurrentUserID() {
-
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null) {
-            return "unknown";
-        }
-        List<String>  aa = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-        log.debug("aa : {}", aa);
-        return "aa";
-       /* 
-        String username = null;
-        if (authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails springSecurityUser = (UserDetails) authentication.getPrincipal();
-            username = springSecurityUser.getUsername();
-        } else if (authentication.getPrincipal() instanceof String) {
-            username = (String) authentication.getPrincipal();
-        }
-
-        return username;
-        */
     }
 
 }

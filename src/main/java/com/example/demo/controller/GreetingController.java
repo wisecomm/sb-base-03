@@ -49,23 +49,18 @@ public class GreetingController {
                                             	, HttpServletResponse response
 												, @RequestParam String userId, @RequestParam String userPw) {
 		log.info("adminlogin 메소드 콜");
-
-		/*
-		UserDetailsDto userDetailsDto = (UserDetailsDto) userDetailsService.loadUserByUsername(userId);
-		if (!(userDetailsDto.getUserPw().equalsIgnoreCase(userPw))) {
-			throw new BadCredentialsException(userDetailsDto.getUserNm() + "Invalid password");
-		}
-
-//		userService.selectUserList(null);
-
-
-        return ResponseEntity.ok().body(new GResponse("0000", "0000 리턴 메시지", userDetailsDto));
-		*/
-		userService.getUserById(userId);
 		
 		String jwt = loginService.login(null, userId, userPw);
 
         return ResponseEntity.ok().body(new GResponse("0000", "0000 리턴 메시지", jwt));
 	}
-    
+
+    @PostMapping("/test")
+	public ResponseEntity<GResponse> greeting() {
+		log.info("test 메소드 콜");
+		String strTemp = loginService.getTest();
+
+		return ResponseEntity.ok().body(new GResponse("0000", "greeting 리턴 메시지", strTemp));
+	}
+	
 }

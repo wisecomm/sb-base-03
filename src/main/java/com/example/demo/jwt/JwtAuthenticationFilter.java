@@ -61,7 +61,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         logger.warn("2222===JWT Token is missing");
-
+        chain.doFilter(request, response);
+        return;     // 종료
+/*
         try {
             // [STEP2] Header 내에 Authorization, x-refresh-token를 확인하여 접근/갱신 토큰의 존재여부를 체크합니다.
             String accessTokenHeader = request.getHeader(ACCESS_TOKEN_HEADER_KEY);
@@ -128,6 +130,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         catch (Exception e) {
             jwtTokenHelper.sendHttpResponseTokenError(response, e);
         }
+*/
     }
 
     /**
