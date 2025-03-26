@@ -23,8 +23,8 @@ import java.util.Date;
 @Slf4j
 @Service
 public class GJwtTokenHelper {
-    public static final String JWT_USER_ID = "LOGIN_ID";
-    public static final String JWT_USER_ROLE = "LOGIN_TYPE";
+    public static final String JWT_USER_ID = "USER_ID";
+    public static final String JWT_USER_ROLE = "USER_ROLE";
     public static final String JWT_CORP_CODE = "CORP_CODE";
 
     private SecretKey JWT_SECRET_KEY;
@@ -96,8 +96,6 @@ public class GJwtTokenHelper {
         try {
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
             String authHeader = request.getHeader("Authorization");
-            log.info("authHeader : {}", authHeader);
-            log.info("authHeader2 : {}", getHeaderToToken(authHeader));
             return getHeaderToToken(authHeader);
         } catch (IllegalStateException e) {
             log.warn("Not called within request context - RequestContextHolder not available");
