@@ -35,11 +35,11 @@ public class GJwtTokenHelper {
      * JWT_SECRET_KEY 변수값에 환경 변수에서 불러온 SECRET_KEY를 주입합니다.
      */
     public GJwtTokenHelper(@Value("${jwt.secret-key}") String jwtSecretKey,
-        @Value("${jwt.access-token-expiration}") int jwtAccessTokenExp,
-        @Value("${jwt.refresh-token-expiration}") int jwtRefreshTokenExp ) {
+        @Value("${jwt.access-token-expiration-min}") int jwtAccessTokenExp,
+        @Value("${jwt.refresh-token-expiration-day}") int jwtRefreshTokenExp ) {
         this.JWT_SECRET_KEY = Keys.hmacShaKeyFor(jwtSecretKey.getBytes(StandardCharsets.UTF_8));
-        this.jwtAccessTokenExp = jwtAccessTokenExp;
-        this.jwtRefreshTokenExp = jwtRefreshTokenExp;
+        this.jwtAccessTokenExp = jwtAccessTokenExp * 60 * 1000; // 분
+        this.jwtRefreshTokenExp = jwtRefreshTokenExp * 24 * 60 * 60 * 1000;  // 일자
     }
 
 

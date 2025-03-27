@@ -67,7 +67,7 @@ server:
 jwt:
   # 1. spring Boot Security + Key 설정(* 반드시 32이상 글자로 구성되어야 함)
   secret-key: 7Hs9x2mK4Lp6Rw3tYzAqBcDfGjNvXeUi
-  # 2. JWT Token Expiration 30분(1800000)
-  access-token-expiration: 600000
-  # 3. JWT Token Expiration 7일(604800000)
-  refresh-token-expiration: 604800000
+  # 2. JWT Token Expiration 30분
+  access-token-expiration-min: 30
+  # 3. JWT Token Expiration 7일
+  refresh-token-expiration-day: 7
