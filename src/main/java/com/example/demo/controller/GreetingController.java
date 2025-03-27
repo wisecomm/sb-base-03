@@ -25,8 +25,6 @@ public class GreetingController {
     //..
     private final LoginService loginService;
 
-	private final UserService userService;
-		
     @Operation(summary = "화이트 리스트 테스트( 로그인 없이 접근 가능 )")
 	@GetMapping("/greeting")
 	public ResponseEntity<GResponse> greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
