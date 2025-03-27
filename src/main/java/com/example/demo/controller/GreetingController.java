@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.common.model.GResponse;
+import com.example.demo.model.map.MapAdminLogin;
 import com.example.demo.service.LoginService;
 import com.example.demo.service.UserService;
 
@@ -41,9 +42,9 @@ public class GreetingController {
 												, @RequestParam String userId, @RequestParam String userPw) {
 		log.info("adminlogin 메소드 콜");
 		
-		String jwt = loginService.login(null, userId, userPw);
+		MapAdminLogin mapAdminLogin = loginService.adminLogin(null, userId, userPw);
 
-        return ResponseEntity.ok().body(new GResponse("0000", "0000 리턴 메시지", jwt));
+        return ResponseEntity.ok().body(new GResponse("0000", "0000 리턴 메시지", mapAdminLogin));
 	}
 
     @Operation(summary = "로그인 정보 테스트( token 으로 로그인 정보 가져오기 )")

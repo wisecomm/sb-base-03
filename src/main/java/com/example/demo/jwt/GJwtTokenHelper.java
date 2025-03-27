@@ -174,7 +174,7 @@ public class GJwtTokenHelper {
             }
             // [CASE3] 이외 JWT내에서 오류 발생
             else {
-                resultMsg = "OTHER TOKEN ERROR" + e.getMessage();
+                resultMsg = "OTHER TOKEN ERROR : " + e.getMessage();
             }
     
             gResponse.setMessage(resultMsg);
@@ -186,10 +186,37 @@ public class GJwtTokenHelper {
 
             ObjectMapper objectMapper = new ObjectMapper();
             printWriter.print(objectMapper.writeValueAsString(gResponse));
+            printWriter.flush();
+            printWriter.close();
+        } catch (Exception exception) {
+            log.error("sendHttpResponseTokenError Exception:", exception);
+        }
+    }
+
+    public void sendHttpResponseTokenRefresh(HttpServletResponse response, String refreshToken) {
+        try {
+            String resultMsg = "토큰이 유효하지 않습니다.";
+
+            GResponse gResponse = new GResponse("E401", resultMsg);
+
+            Claims claims = getTokenToClaims(refreshToken);
+            String userId = claims.get(GJwtTokenHelper.JWT_USER_ID).toString();
+            String role = claims.get(GJwtTokenHelper.JWT_USER_ROLE).toString();
+    
+            String jwt = generateJwt(userId, role, "1234");
+            gResponse.setData(jwt);
+            gResponse.setStatus(401);
+    
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            PrintWriter printWriter = response.getWriter();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            printWriter.print(objectMapper.writeValueAsString(gResponse));
                 printWriter.flush();
             printWriter.close();
         } catch (Exception exception) {
-            log.error("Token Expired", exception);
+            log.error("sendHttpResponseTokenRefresh Exception:", exception);
         }
     }
 

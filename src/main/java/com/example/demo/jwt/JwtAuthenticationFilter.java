@@ -4,27 +4,15 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import io.micrometer.common.util.StringUtils;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Component
@@ -60,10 +48,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;     // 종료
         }
 
-        logger.warn("2222===JWT Token is missing");
-        chain.doFilter(request, response);
-        return;     // 종료
-/*
         try {
             // [STEP2] Header 내에 Authorization, x-refresh-token를 확인하여 접근/갱신 토큰의 존재여부를 체크합니다.
             String accessTokenHeader = request.getHeader(ACCESS_TOKEN_HEADER_KEY);
@@ -74,22 +58,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (StringUtils.isNotBlank(accessTokenHeader) || StringUtils.isNotBlank(refreshTokenHeader)) {
 
                 String paramAccessToken = jwtTokenHelper.getHeaderToToken(accessTokenHeader);
-                String paramRefreshToken = jwtTokenHelper.getHeaderToToken(refreshTokenHeader);
 
                 // [STEP4] 접근 토큰(Access Token)의 유효성을 체크합니다.
                 ValidToken accTokenValid = jwtTokenHelper.isValidToken(paramAccessToken);
 
                 // [STEP5-1] 접근 토큰이 유효하다면 다음 프로세스를 진행합니다.
                 if (accTokenValid.isValid()) {
-                    // [STEP6] 접근 토큰(Access Token)내에 전달하려는 사용자 정보를 확인합니다.
-                    // [STEP6-1] 사용자 정보가 존재한다면 다음 필터로 이동을 합니다.
-                    if (StringUtils.isNotBlank(jwtTokenHelper.getClaimsToUserId(paramAccessToken))) {
-                        chain.doFilter(request, response);
-                    }
-                    // [STEP6-2] 사용자 정보가 존재하지 않는 다면 에러 메시지를 클라이언트에게 전달합니다.
-                    else {
-                        throw new Exception("토큰 내에 사용자 아이디가 존재하지 않습니다");
-                    }
+                    chain.doFilter(request, response);
                 }
                 // [STEP5-2] 접근 토큰이 존재하지 않으면 접근 토큰의 에러 정보를 확인합니다.
                 else {
@@ -97,20 +72,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     // [STEP6-1] 오류가 토큰이 만료된 오류 인 경우 다음 프로세스를 진행합니다.
                     if (accTokenValid.getErrorName().equals("TOKEN_EXPIRED")) {
 
+                        String paramRefreshToken = jwtTokenHelper.getHeaderToToken(refreshTokenHeader);
                         // [STEP7] 리프레시 토큰(Refresh Token)이 유효한지 체크를 합니다.
                         // [STEP7-1] 리프레시 토큰이 유효하다면 접근 토큰을 갱신합니다. 갱신하여 재 생성된 접근 토큰을 반환합니다.
                         if (jwtTokenHelper.isValidToken(paramRefreshToken).isValid()) {
-                            
-                            // danyoh : 수정 필요
 
-                            // Token 내에 사용자 정보를 추출하고 이를 기반으로 토큰을 생성합니다.
-//                            UserDto claimsToUserDto = TokenUtils.getClaimsToUserDto(paramRefreshToken, false);
-//                            System.out.println("claimsToUserDto ::  " + claimsToUserDto);
-
-
-//                            String token = TokenUtils.generateJwt(claimsToUserDto);         // 접근 토큰(AccessToken)을 새로 발급합니다.
-//                            sendToClientAccessToken(token, response);                       // 발급한 접근 토큰을 클라이언트에게 전달합니다.
-                            chain.doFilter(request, response);                              // 리소스로 접근을 허용합니다.
+                            jwtTokenHelper.sendHttpResponseTokenRefresh(response, paramRefreshToken);
+//                            chain.doFilter(request, response);                              // 리소스로 접근을 허용합니다.
                         }
                         // [STEP7-2] 리프레시 토큰이 유효하지 않다면 에러 메시지를 클라이언트에게 전달합니다.
                         else {
@@ -130,7 +98,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         catch (Exception e) {
             jwtTokenHelper.sendHttpResponseTokenError(response, e);
         }
-*/
+
     }
 
     /**
