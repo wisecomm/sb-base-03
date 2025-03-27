@@ -26,13 +26,11 @@ public class LoginService {
     private final GJwtTokenHelper jwtTokenHelper;
     private final UserService userService;
 
-    //..
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-
     public MapAdminLogin adminLogin(HttpServletRequest request, String userId, String userPwd) {
-		Optional<UserMap> userOptional = userService.getUserById(userId);
-
         MapAdminLogin mapAdminLogin = new MapAdminLogin();
+
+		Optional<UserMap> userOptional = userService.getUserById(userId);
+        mapAdminLogin.setUserNm(userOptional.get().getUserNm());
 
         String jwt = jwtTokenHelper.generateJwt(userOptional.get().getUserId(), "ADMIN", "1234");
         mapAdminLogin.setAccessToken(jwt);

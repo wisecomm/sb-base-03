@@ -13,7 +13,7 @@ public class MapAdminLogin {
     private String accessToken;
     private String refreshToken;
     private String corpCode;
-    private String manCorpCode;
+    private String userNm;
     private Date loginTimeCurrent;
     private Date loginTimeLast;
     private String loginIp;

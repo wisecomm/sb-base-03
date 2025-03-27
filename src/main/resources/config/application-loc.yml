@@ -1,18 +1,44 @@
+define:
+  ip: localhost:3306
+  name: testdb
+
 # Spring Boot Configuration
 spring:
   # 1. Spring Boot JDBC + HikariCP 설정
   datasource:
     hikari:
-      driver-class-name: org.postgresql.Driver
-      jdbc-url: jdbc:postgresql://localhost:5432/testdb
-      username: postgres
-      password: postgres123
+      driver-class-name: org.mariadb.jdbc.Driver
+      jdbc-url: jdbc:mariadb://${define.ip}/${define.name}?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF8&allowMultiQueries=true&autoReconnect=true&createDatabaseIfNotExist=true
+      username: root
+      password: maria123
       pool-name: Hikari Connection Pool # Alias
       maximum-pool-size: 5
-  # data:
-  #   redis:
-  #     host: localhost
-  #     port: 6379
+
+      # Connection pool settings
+      connection-timeout: 30000 # default 30000 (30 seconds)
+      idle-timeout: 600000 # default 600000 (10 minutes)
+      max-lifetime: 1800000 # default 1800000 (30 minutes)
+      minimum-idle: 5 # default same as maximum-pool-size
+
+      # MariaDB specific properties
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+        useLocalSessionState: true
+        rewriteBatchedStatements: true
+        cacheResultSetMetadata: true
+        cacheServerConfiguration: true
+        elideSetAutoCommits: true
+        maintainTimeStats: false
+
+      # driver-class-name: org.postgresql.Driver
+      # jdbc-url: jdbc:postgresql://localhost:5432/testdb
+      # username: postgres
+      # password: postgres123
+      # pool-name: Hikari Connection Pool # Alias
+      # maximum-pool-size: 5
 
 springdoc:
   # swagger-ui
