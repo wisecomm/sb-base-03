@@ -23,7 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final List<String> WHITELIST_URLS = Arrays.asList(
         "/swagger-ui/**",
         "/v3/api-docs/**",
-        "/api/v1/greeting/greeting",
+        "/api/v1/greeting/**",
         "/api/v1/base/auth/adminlogin"
     );
 

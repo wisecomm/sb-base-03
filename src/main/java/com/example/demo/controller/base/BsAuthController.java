@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.common.exception.GException;
 import com.example.demo.common.model.GResponse;
 import com.example.demo.model.map.MapAdminLogin;
 import com.example.demo.service.base.LoginService;
@@ -29,7 +30,7 @@ public class BsAuthController {
     @PostMapping("/adminlogin")
 	public ResponseEntity<GResponse> adminlogin(HttpServletRequest request
                                             	, HttpServletResponse response
-												, @RequestParam String userId, @RequestParam String userPw) {
+												, @RequestParam String userId, @RequestParam String userPw) throws GException {
 		log.info("adminlogin 메소드 콜");
 		
 		MapAdminLogin mapAdminLogin = loginService.adminLogin(null, userId, userPw);
@@ -39,7 +40,7 @@ public class BsAuthController {
 
     @Operation(summary = "로그인 정보 테스트( token 으로 로그인 정보 가져오기 )")
     @PostMapping("/logininfo")
-	public ResponseEntity<GResponse> greeting() {
+	public ResponseEntity<GResponse> logininfo() throws GException {
 		String strTemp = loginService.getTest();
 
 		return ResponseEntity.ok().body(new GResponse("0000", "", strTemp));
