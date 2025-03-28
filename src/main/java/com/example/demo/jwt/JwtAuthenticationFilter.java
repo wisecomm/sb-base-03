@@ -21,14 +21,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String ACCESS_TOKEN_HEADER_KEY = "Authorization";
     private static final String REFRESH_TOKEN_HEADER_KEY = "x-refresh-token";
     private static final List<String> WHITELIST_URLS = Arrays.asList(
-            "/api/v1/user/login",
-            "/api/v1/token/token",
-            "/user/login",
-            "/token/token",
-            "/swagger-ui/**",
-            "/v3/api-docs/**",
-            "/greeting",
-            "/adminlogin"
+        "/swagger-ui/**",
+        "/v3/api-docs/**",
+        "/api/v1/greeting/greeting",
+        "/api/v1/base/auth/adminlogin"
     );
 
     private final GJwtTokenHelper jwtTokenHelper;

@@ -40,10 +40,9 @@ public class BsAuthController {
     @Operation(summary = "로그인 정보 테스트( token 으로 로그인 정보 가져오기 )")
     @PostMapping("/logininfo")
 	public ResponseEntity<GResponse> greeting() {
-		log.info("test 메소드 콜");
 		String strTemp = loginService.getTest();
 
-		return ResponseEntity.ok().body(new GResponse("0000", "greeting 리턴 메시지", strTemp));
+		return ResponseEntity.ok().body(new GResponse("0000", "", strTemp));
 	}
 	
 }
